@@ -1,8 +1,8 @@
 # Variables.
-HDIR = ./include
-SDIR = ./src
-ODIR = ./tmp
-PROG = ./netcp
+HDIR = ../include
+SDIR = ../src
+ODIR = ../tmp
+PROG = ../prog
 
 # Macros
 CFLAGS = -std=c++11 -std=gnu++11 -I$(HDIR) -L/usr/local/lib # Flags para el compilador.
@@ -12,7 +12,7 @@ CC     = g++ -Ofast # Definición del compilador.
 #OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 OUTPUT = main # Nombre del fichero ejecutable.
-SRC    = $(SDIR)/main.cpp mundo.cpp hormiga.cpp  # Definición de ficheros fuente.
+SRC    = $(SDIR)/main.cpp  $(SDIR)/mundo.cpp  $(SDIR)/hormiga.cpp  # Definición de ficheros fuente.
 
 # Orden por defecto
 all: clean $(OUTPUT)
