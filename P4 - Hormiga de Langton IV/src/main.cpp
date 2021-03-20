@@ -9,14 +9,11 @@ int protectedMain(int argc, char* argv[]) {
     //MundoInfinito Mi(15,10);
     //MundoFinito   Mf(20,10);
     
-    
     anthill ants;
-    HormigaA anta(-2, 2,DO_LE); ants.push_back(&anta);
-    HormigaB antb( 2,-2,UP_RI); ants.push_back(&antb);
-    
+    //HormigaA anta(-2, 2,DO_LE); ants.push_back(&anta);
+    //HormigaB antb( 2,-2,UP_RI); ants.push_back(&antb);
 
-
-    Mundo M(-5,6);
+    Mundo M(-4,4);
     M.to_s(ants);
 
     return EXIT_SUCCESS;

@@ -13,9 +13,7 @@ using namespace std;
 typedef list<Hormiga*>          anthill;
 typedef evector<evector<int>>   matrix;
 typedef pair<int,int>           range;
-typedef pair<int,point>         cell;
 
-enum class colorM { WHITE = 0, BLACK = 1 }; 
 static const std::string color[] = { " ", "█" }; 
 
 /**
@@ -49,17 +47,18 @@ class Mundo {
  * 
  * */
 
-#define PAR(x) (x%2 == 0)
 Mundo::Mundo(int acho, int alto) {
     
-    int mw = acho/2;
-    int mh = alto/2;
-    
-    range sx = PAR(acho)? make_pair(-mw,mw): make_pair(-mw,mw+1);
-    range sy = PAR(alto)? make_pair(-mh,mh): make_pair(-mh,mh+1);
+    range sx = (acho%2 == 0)?
+    make_pair(-(acho/2),(acho/2)):
+    make_pair(-(acho/2),(acho/2)+1);
+
+    range sy = (alto%2 == 0)?
+    make_pair(-(alto/2),(alto/2)):
+    make_pair(-(alto/2),(alto/2)+1);
 
     _malla.resize(
-        sy.first, sy.second, 
+        sy.first, sy.second,
         evector<int>(sx.first,sx.second, WHITE)
     );
     _malla[0][1] = 1;
