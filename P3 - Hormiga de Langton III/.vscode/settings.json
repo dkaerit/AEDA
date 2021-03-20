@@ -1,6 +1,5 @@
 {
     "files.associations": {
-        "vector": "cpp",
         "array": "cpp",
         "atomic": "cpp",
         "*.tcc": "cpp",
@@ -12,10 +11,13 @@
         "cstdint": "cpp",
         "cstdio": "cpp",
         "cstdlib": "cpp",
+        "ctime": "cpp",
         "cwchar": "cpp",
         "cwctype": "cpp",
         "deque": "cpp",
+        "list": "cpp",
         "unordered_map": "cpp",
+        "vector": "cpp",
         "exception": "cpp",
         "algorithm": "cpp",
         "memory": "cpp",
@@ -39,12 +41,6 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp",
-        "ctime": "cpp",
-        "cstring": "cpp",
-        "chrono": "cpp",
-        "ratio": "cpp",
-        "iomanip": "cpp",
-        "list": "cpp",
         "cassert": "cpp"
     }
 }

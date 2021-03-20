@@ -14,20 +14,22 @@
 #define WHITE "█" // 1
 
 typedef std::vector<std::vector<int>> matrix;
+typedef std::vector<Hormiga> anthill;
 
 class Mundo {
     private:
         matrix _malla;
         int _x, _y;
 
-        void sleep(clock_t sec);
-
     public:
         Mundo(int x, int y);
         virtual ~Mundo();
 
-        void start(int times, Hormiga& ant);
+        void start(Hormiga& ant);
+        void start(int num);
+        
         void printWorld(Hormiga& ant);
+        void printWorld(anthill& h);
 };
 
 #endif 
