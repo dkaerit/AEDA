@@ -75,16 +75,20 @@ void Mundo::markCells() {
     }
 }
 
+static int countExepctions = 0;
 void Mundo::actualizar(anthill& ants) {
     try { 
         try {
             for(auto ant: ants) ant->actualizar(getMalla());        
         } catch(cell& c) {
+            countExepctions++;
             handlerAntOverflow(ants,c);
         } catch(row& r) {
+            countExepctions++;
             handlerAntOverflow(ants,r[_malla.suplim()]);
         }
     } catch(cell& c) {
+        countExepctions++;
         handlerAntOverflow(ants,c);
     }
     
@@ -142,8 +146,9 @@ void Mundo::to_s(anthill& ants) {
             (!_malla[i][j].second) ? cout << color[BLACK] : cout << color[WHITE]; // pintar celda
             hubohormiga = 0; // resetear booleano de hormiga encontrada
         }
-        cout << endl;
+        cout << endl; 
     }
+    cout << "Excepciones: " << countExepctions << "\n";
 
     //getchar();
 }

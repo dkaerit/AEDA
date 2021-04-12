@@ -1,0 +1,67 @@
+bool isNull(Clave& first);
+bool isEqual(Clave& first, Clave& second);
+bool isIn(Clave& X, Clave& first);
+bool isCandidate(Clave& X, Clave& first, Clave& second);
+
+// buscar
+Clave c1 = _fd(X), c2 = _fd(c1+1);
+
+if(isIn(X,c1)) return true; 
+else {   
+    while ((isNull(c2)) && (isCandidate(X,c1,c2))) c2 = _fd(c2+1); 
+    if(isEqual(c1,c2))  return false; 
+    else if(isNull(c2)) return false;    
+    return true;  
+} 
+
+// insertar
+Clave c1 = _fd(X), c2 = _fd(c1+1);
+
+if(isNull(c1)) return true; 
+else {
+    while((!isNull(c2)) && (isCandidate(X,c1,c2))) c2 = _fd(c2+1);    
+    if(isEqual(c1,c2))  return false; // tabla saturada
+    else if(isIn(X,c2)) return false; // Ya se ha insertado ese elemento 
+    return true;
+} 
+
+template<class Clave>
+bool Lista<Clave>::isNull(Clave& first) {
+    if(_lista[first] == NULL) return true;
+    else                      return false;
+}
+
+template<class Clave>
+bool Lista<Clave>::isIn(Clave& X, Clave& first) {
+    if(_lista[first] == X) return true;
+    else                   return false;
+}
+
+template<class Clave>
+bool Lista<Clave>::isEqual(Clave& first, Clave& second) {
+    if((first == second)) return true;
+    else                  return false;
+}
+
+template<class Clave>
+bool Lista<Clave>::isCandidate(Clave& X, Clave& first, Clave& second) {
+    if((isIn(X,second)) 
+    && (!isEqual(c1,c2))) return true;
+    else                  return false;
+}
+
+    /*if(_vDatos[dir].buscar(X)) { 
+        cout << " [✔️] Se ha encontrado en la dirección: " << dir << endl;
+        return true;
+    } else {
+        cout << " [❌] No existe esa clave en la tabla: " << dir << endl;
+        return false;
+    }*/
+
+        /*if(_vDatos[dir].insertar(X)) { 
+        cout << " [✔️] Insertado en la dirección: " << dir << " / " << &_vDatos[dir] << endl;
+        return true;
+    } else {
+        cout << " [❌] Ya se ha insertado esa clave en: " << dir << endl;
+        return false;
+    } */
