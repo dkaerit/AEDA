@@ -1,0 +1,20 @@
+/*
+    while(_vDatos[candidato].estaLleno()) {
+        candidato = (*_fe)(X,candidato); 
+        if(candidato == dir) break; // ha dado una vuelta 
+    }*/
+
+    //cout << "Elemento: " << (*_lista.find(X)) << endl;
+
+    if(_vDatos[candidato].insertar(X)) 
+        return mr(true,  "[✔] Insertado en la dirección: ", candidato);
+    else 
+        return mr(false, "[✘] Ya se ha insertado esa clave en: ", candidato);
+
+            while(_vDatos[candidato].estaLleno()) {
+        candidato = ((*_fe)(X,candidato))%_nDatos; 
+        if(candidato == dir) {
+            checkedAll = true; 
+            break;
+        }
+    }
