@@ -1,0 +1,10 @@
+    //int        s[] = {16,2,77,29};
+    //sz  = sizeof(s)/sizeof(int);
+    //deque<int> v(s,s+sz);
+
+    deque<Clave> a(2,0);
+    deque<Clave> b(4,5);
+    deque<Clave> c;
+
+    //copy(c.begin(),c.end(),back_inserter(e));
+    //copy(d.begin(),d.end(),back_inserter(e));

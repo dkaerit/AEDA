@@ -16,7 +16,7 @@ CC     = g++ -Ofast # Definición del compilador.
 #OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 OUTPUT = main # Nombre del fichero ejecutable.
-SRC    = $(SDIR)/main_alumno.cpp 
+SRC    = $(SDIR)/main.cpp 
 
 # Orden por defecto
 all: clean $(OUTPUT)
