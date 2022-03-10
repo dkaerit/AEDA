@@ -1,0 +1,6 @@
+// muerta -> huevo si (vecinos adulta 2+) else muerta
+// huevo -> muerta si (vecinas larva > huevos) else larva
+// larva -> muerta si (vecinas larva > huevos+pupas+adultas) else pupa
+// pupa -> muerta si (vecinas  larva > huevos|pupas|adultas) else adulta
+// adulta -> huevo si (vecinas adulta 1+) else muerta
+//⠀

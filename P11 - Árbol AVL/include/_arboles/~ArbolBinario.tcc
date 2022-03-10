@@ -43,6 +43,7 @@ class AB {
         const bool equ() { return equRama(_raiz); }
         
         // recorridos
+        void inorden() { inordenRama(_raiz); } 
         void recorre() { recorreRama(_raiz); }
         void recorreN();
 
@@ -52,6 +53,7 @@ class AB {
         const int  altNivl(nodoB<Clave>* nodo);
 
         void   recorreRama(nodoB<Clave>* nodo);
+        void   inordenRama(nodoB<Clave>* nodo);
 
         
         
@@ -195,6 +197,18 @@ void AB<Clave>::recorreRama(nodoB<Clave>* nodo) {
         recorreRama(nodo->dcho);
     }   
 }
+
+
+
+template<class Clave>
+void AB<Clave>::inordenRama(nodoB<Clave>* nodo) {
+    if(nodo) {
+        inordenRama(nodo->izdo);
+        cout << nodo->dato << ", ";
+        inordenRama(nodo->dcho);
+    }   
+}
+
 
 
 
