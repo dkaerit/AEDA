@@ -54,6 +54,7 @@
         "xloctime": "cpp",
         "fstream": "cpp",
         "*.tpp": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "algorithm": "cpp"
     }
 }

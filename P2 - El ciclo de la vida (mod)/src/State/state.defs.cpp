@@ -15,7 +15,27 @@
 #include "./larva.derived.hpp"
 #include "./pupa.derived.hpp"
 #include "./adult.derived.hpp"
+#include "./xenon.derived.hpp"
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                             //
+//                            DEFINICIONES DE LA CLASE XENON                                   //
+//                                                                                             //
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+State* StateXenon::nextState() { 
+    return _next;
+}
+
+char StateXenon::getState() const {
+    return symbol[xenon];
+}
+
+
+int StateXenon::neighbors(const Grid& grid, int i, int j) {
+    _next = new StateDead();
+    return 0;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                             //
@@ -27,26 +47,33 @@ State* StateDead::nextState() {
     return _next;
 }
 
-const char* StateDead::getState() const {
-    return "  "; 
-    //return " ";
+char StateDead::getState() const {
+    return symbol[muerta];
 }
+
 
 int StateDead::neighbors(const Grid& grid, int i, int j) {
     int adultas = 0;
+    int xenons = 0;
 
-    // Contar vecinos
+    // Contar vecinos    
     for(auto x = -1; x < 2; x++) {
         for(auto y = -1; y < 2; y++) {
             if(!grid.isMargin(x+i,y+j) && !(x==0 && y==0)) {
-                if(instanceof<StateAdult>(grid.getCell(x+i,y+j).getState())) adultas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[adulta]) adultas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[xenon]) xenons++;
             }
-            
         }
     }
-
+    
     // condiciones
-    _next = (adultas >= 2)? static_cast<State*>(new StateEgg()) : static_cast<State*>(new StateDead());
+    if(xenons > 0) _next = new StateXenon();
+    else {
+        _next = (adultas >= 2)? static_cast<State*>(new StateEgg()) : static_cast<State*>(new StateDead());
+    }
+    
+
+
     return adultas;
 }
 
@@ -60,9 +87,8 @@ State* StateEgg::nextState() {
     return _next;
 }
 
-const char* StateEgg::getState() const {
-    return "⛶ ";
-    //return "E";
+char StateEgg::getState() const {
+    return symbol[huevo];
 }
 
 int StateEgg::neighbors(const Grid& grid, int i, int j) {
@@ -73,8 +99,8 @@ int StateEgg::neighbors(const Grid& grid, int i, int j) {
     for(auto x = -1; x < 2; x++) {
         for(auto y = -1; y < 2; y++) {
             if(!grid.isMargin(x+i,y+j) && !(x==0 && y==0)) {
-                if(instanceof<StateLarva>(grid.getCell(x+i,y+j).getState())) larvas++;
-                if(instanceof<StateEgg>(grid.getCell(x+i,y+j).getState())) huevos++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[larva]) larvas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[huevo]) huevos++;
             }
             
         }
@@ -95,9 +121,8 @@ State* StateLarva::nextState() {
     return _next;
 }
 
-const char* StateLarva::getState() const {
-    return "▢ ";
-    //return "L";
+char StateLarva::getState() const {
+    return symbol[larva];
 }
 
 int StateLarva::neighbors(const Grid& grid, int i, int j) {
@@ -108,10 +133,10 @@ int StateLarva::neighbors(const Grid& grid, int i, int j) {
     for(auto x = -1; x < 2; x++) {
         for(auto y = -1; y < 2; y++) {
             if(!grid.isMargin(x+i,y+j) && !(x==0 && y==0)) {
-                if(instanceof<StateLarva>(grid.getCell(x+i,y+j).getState())) larvas++;
-                if(instanceof<StateEgg>(grid.getCell(x+i,y+j).getState())) hpa++;
-                if(instanceof<StatePupa>(grid.getCell(x+i,y+j).getState())) hpa++;
-                if(instanceof<StateAdult>(grid.getCell(x+i,y+j).getState())) hpa++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[larva]) larvas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[huevo]) hpa++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[pupa]) hpa++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[adulta]) hpa++;
             }
             
         }
@@ -132,9 +157,8 @@ State* StatePupa::nextState() {
     return _next;
 }
 
-const char* StatePupa::getState() const {
-    return "◧ ";
-    //return "P";
+char StatePupa::getState() const {
+    return symbol[pupa];
 }
 
 int StatePupa::neighbors(const Grid& grid, int i, int j) {
@@ -147,17 +171,17 @@ int StatePupa::neighbors(const Grid& grid, int i, int j) {
     for(auto x = -1; x < 2; x++) {
         for(auto y = -1; y < 2; y++) {
             if(!grid.isMargin(x+i,y+j) && !(x==0 && y==0)) {
-                if(instanceof<StateLarva>(grid.getCell(x+i,y+j).getState())) larvas++;
-                if(instanceof<StateEgg>(grid.getCell(x+i,y+j).getState())) huevos++;
-                if(instanceof<StatePupa>(grid.getCell(x+i,y+j).getState())) pupas++;
-                if(instanceof<StateAdult>(grid.getCell(x+i,y+j).getState())) adultas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[larva]) larvas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[huevo]) huevos++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[pupa]) pupas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[adulta]) adultas++;
             }
             
         }
     }
 
     // condiciones
-    _next = (larvas > std::max({huevos, pupas, adultas}))? static_cast<State*>(new StateEgg()) : static_cast<State*>(new StateAdult());
+    _next = (larvas > std::min({huevos, pupas, adultas}))? static_cast<State*>(new StateEgg()) : static_cast<State*>(new StateAdult());
     return adultas;
 }
 
@@ -172,9 +196,8 @@ State* StateAdult::nextState() {
     return _next;
 }
 
-const char* StateAdult::getState() const {
-    return "◼ ";
-    //return "A";
+char StateAdult::getState() const {
+    return symbol[adulta];
 }
 
 int StateAdult::neighbors(const Grid& grid, int i, int j) {
@@ -184,13 +207,13 @@ int StateAdult::neighbors(const Grid& grid, int i, int j) {
     for(auto x = -1; x < 2; x++) {
         for(auto y = -1; y < 2; y++) {
             if(!grid.isMargin(x+i,y+j) && !(x==0 && y==0)) {
-                if(instanceof<StateAdult>(grid.getCell(x+i,y+j).getState())) adultas++;
+                if(grid.getCell(x+i,y+j).getState() == symbol[adulta]) adultas++;
             }
             
         }
     }
 
     // condiciones
-    _next = (adultas > 1)? static_cast<State*>(new StateEgg()) : static_cast<State*>(new StateDead());
+    _next = (adultas > 1)? static_cast<State*>(new StateEgg()) : static_cast<State*>(new StateDead());   
     return adultas;
 }

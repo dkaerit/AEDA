@@ -29,15 +29,16 @@ typedef std::pair<int,int> point;
 class Cell {
     private:
         State* _state; // estado de la célula
-        point _pos;   // first: eje x, second: eje y
+        int _i, _j;   // first: eje x, second: eje y
+        bool _transition = false;
 
     public:
         Cell() {} // constructor por defecto
         Cell(int, int, State*); // construye la célula dado i,j,code
         virtual ~Cell() {} // destructor
 
-        State* getState() const; // state getter
-        State* setState(State*); // state setter
+        char getState() const; // state getter
+        void setState(State*); // state setter
 
         point getPos(); // pos getter
         void  setPos(int,int); // pos setter
@@ -46,9 +47,6 @@ class Cell {
         void updateState(); // aplica regla de transición
     
         friend std::ostream& operator<<(std::ostream&, const Cell&); // print cell
-    
-    private:
-        int countNeighbors(const Grid&, const State&); // cuenta los vecinos que cumplan un estado dado
 };
 
 

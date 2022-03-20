@@ -22,9 +22,8 @@
 class StateDead: public State {
     public:
         StateDead(): State() {}
-        
         State* nextState(); 
-        const char* getState() const; 
+        char getState() const; 
         int neighbors(const Grid&, int i, int j);
 
 };

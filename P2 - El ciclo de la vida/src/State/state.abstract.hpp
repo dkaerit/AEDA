@@ -13,8 +13,12 @@
 
 #include <algorithm>
 #include "../Grid/grid.basic.hpp"
-#include "../Auxiliar/root.helper.inl"
 class Grid;
+
+enum StateCoding { muerta=0, huevo=1, larva=2, pupa=3, adulta=4 };
+static char symbol[] = { ' ', 'H', 'L', 'P', 'A' };
+//static const char* especial[] = { " ", "⛶", "▢", "◧", "◼" };
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                             //
@@ -32,7 +36,10 @@ class State {
 
         // Funciones nulas
         virtual State* nextState() = 0; // setea el estdo siguiente (_next)
-        virtual const char* getState() const = 0; // obtiene el estado actual (_current)
+        virtual void setNext(State* st) {
+            _next = st;
+        }
+        virtual char getState() const = 0; // obtiene el estado actual (_current)
         virtual int neighbors(const Grid&, int i, int j) = 0; // cuenta la vecindad
 
         friend std::ostream& operator<<(std::ostream&, const State* state); // print cell
@@ -41,7 +48,6 @@ class State {
         
 };
 
-#include "./state.helper.inl"
 #endif
 
 

@@ -43,6 +43,9 @@ all: clean gpp # Orden por defecto
 #fast: $(OUTDEF) # Con las reglas implicitas (usando .o)
 #	clear && ./main.elf
 
+exec: 
+	./dev.elf
+
 gpp: # Sin las reglas implicitas (sin usar .o)
 	$(GCC) -o $(EDIR)/dev.elf $(FLG) $(SOURCE)
 

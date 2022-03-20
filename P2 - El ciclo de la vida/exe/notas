@@ -4,3 +4,23 @@
 // pupa -> muerta si (vecinas  larva > huevos|pupas|adultas) else adulta
 // adulta -> huevo si (vecinas adulta 1+) else muerta
 //⠀
+
+    //if(adultas >= 2) _next = new StateEgg();
+    //else             _next = new StateDead();
+
+    /*if(_next->getState() != this->getState()) {
+        std::cout << "\n(" << i << ", " << j << ") ";
+        if(adultas >= 2) std::cout << "( adults:" << adultas << " >= 2 )? true, ";
+        else std::cout << "( adults:" << adultas << " >= 2 )? fals, ";
+    }*/
+
+        /*if(_state->nextState()->getState() != _state->getState()) {
+        std::cout << "transición: '" << _state->getState() << "' -> '" << _state->nextState()->getState() << "'";
+        _transition = true;
+    }*/
+
+    //std::cout << "(" << _i << ", " << _j << ") ";
+    //std::cout << "'" << _state->getState() << "' -> '" << _state->nextState()->getState() << "'" ;
+    //if(_transition) std::cout << "\nupdate: '" << _state->getState() << "' -> '" << _state->nextState()->getState() << "'";
+
+    //std::cout << " ~~> '" << _state->getState() << "'" << std::endl;

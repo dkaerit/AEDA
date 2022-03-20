@@ -42,6 +42,7 @@ class Grid {
 
         row& operator[](int index);
         bool isMargin(int, int) const;
+        bool isInside(int, int) const;
     
     protected:
         void fill(int);

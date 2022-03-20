@@ -22,7 +22,8 @@ Grid::Grid(int t): _turns(t) {
  */
 
 Grid::Grid(int x, int y, int t): 
-_n(x+2), _m(y+2), _turns(t) {
+_n(x), _m(y), _turns(t) {
+    //_n(x+2), _m(y+2), _turns(t) {
     _petri.resize(_n, Array<Cell>(_m));
     fill(muerta);
 }
@@ -55,7 +56,8 @@ void Grid::fill(int st) {
  */
 
 const point Grid::getDim() const {
-    return std::make_pair(_n-2,_m-2);
+    //return std::make_pair(_n-2,_m-2);
+    return std::make_pair(_n,_m);
 }
 
 
@@ -70,7 +72,8 @@ const point Grid::getDim() const {
  */
 
 const Cell& Grid::getCell(int i, int j) const {
-    assert(!isMargin(i,j));
+    //assert(!isMargin(i,j));
+    assert(isInside(i,j));
     return _petri[i][j];
 }
 
@@ -86,8 +89,10 @@ const Cell& Grid::getCell(int i, int j) const {
  */
 
 void Grid::setCell(int i, int j, State st) {
-    assert(!isMargin(i+1,j+1));
-    _petri[i+1][j+1].setState(st);    
+    assert(isInside(i,j));
+    _petri[i][j].setState(st); 
+    // assert(!isMargin(i+1,j+1));
+    //_petri[i+1][j+1].setState(st);  
 }
 
 
@@ -123,17 +128,19 @@ void Grid::start() {
 
  void Grid::nextGeneration() {
     // calcular estados siguientes
-    for(auto i=1; i<_n-1; i++) {
-        for(auto j=1; j<_m-1; j++) {
-            if(!isMargin(i,j)) _petri[i][j].neighbors(*this);
+    for(auto i=0; i<_n; i++) {
+        for(auto j=0; j<_m; j++) {
+            //if(!isMargin(i,j)) _petri[i][j].neighbors(*this);
+            _petri[i][j].neighbors(*this);
         }
         //std::cout << std::endl;
     }
 
     // establecer estdo siguiente de la rejilla
-    for(auto i=1; i<_n-1; i++) {
-        for(auto j=1; j<_m-1; j++) {
-            if(!isMargin(i,j)) _petri[i][j].updateState();
+    for(auto i=0; i<_n; i++) {
+        for(auto j=0; j<_m; j++) {
+            //if(!isMargin(i,j)) _petri[i][j].updateState();
+            _petri[i][j].updateState();
         }
     }
  }
@@ -179,4 +186,8 @@ row& Grid::operator[](int index) {
 bool Grid::isMargin(int i, int j) const {
     //std::cout << i << " " << j << " ~~ " << _n-1 << " " << _m-1 << std::endl;
     return (i == 0 || j == 0 || i == (_n-1) || j == (_m-1));
+}
+
+bool Grid::isInside(int i, int j) const {
+    return (i >= 0 && j >= 0 && i < _n && j < _m);
 }

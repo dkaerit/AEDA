@@ -25,12 +25,9 @@ class StatePupa: public State {
         StatePupa(): State() {}
     
         State* nextState(); // setea el estdo siguiente (_next)
-        const char* getState() const; // obtiene el estado actual (_current)
+        char getState() const; // obtiene el estado actual (_current)
         int neighbors(const Grid&, int i, int j);
 
 };
-
-
-
 
 #endif

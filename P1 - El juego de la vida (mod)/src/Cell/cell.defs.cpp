@@ -97,7 +97,8 @@ int Cell::countNeighbors(const Grid& grid, const State& st) {
     int vivas = 0;
     for(auto i = -1; i < 2; i++) {
         for(auto j = -1; j < 2; j++) {
-            if(!grid.isMargin(x+i,y+j) && !(i==0 && j==0)) {
+            //if(!grid.isMargin(x+i,y+j) && !(i==0 && j==0)) {
+            if(grid.isInside(x+i,y+j) && !(i==0 && j==0)) {
                 //std::cout << x+i << " " << y+j << " ~~ no es margen" << std::endl;
                 if(grid.getCell(x+i,y+j).getState().getCurrent() == st.getCurrent()) vivas++;
                 //if(grid.getCell(x+i,y+j).getState().getCurrent() == viva) std::cout << " ~ (" << x+i << ", " << y+j << ") count: " << vivas << std::endl;

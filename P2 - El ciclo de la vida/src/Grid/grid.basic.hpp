@@ -36,8 +36,8 @@ class Grid {
         matrix _petri; // estrutura de la rejilla
 
     public:
-        Grid(State* st, int t=0); 
-        Grid(int,int, State* st, int t=0); // construye la rejilla dado un x,y,t
+        Grid(State*, int t=0); 
+        Grid(int,int, State*, int t=0); // construye la rejilla dado un x,y,t
         virtual ~Grid() {} // destructor
 
         const point getDim() const; // obtiene las dimensiones de la rejilla
@@ -50,6 +50,7 @@ class Grid {
 
         row& operator[](int index);
         bool isMargin(int, int) const;
+        bool isAllDead();
     
     private:
         void fill(State*);

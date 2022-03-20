@@ -1,4 +1,5 @@
 #include "../Grid/grid.basic.hpp"
+#include "../State/dead.derived.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                             //
@@ -11,7 +12,7 @@ Grid::Grid(State* st, int t): _turns(t) {
     _n = (rand()%5+30)+2; // alto
     _m = (rand()%5+85)+2; // ancho
 
-    _petri.resize(_n, Array<Cell>(_m));
+    _petri.resize(_n, Array<Cell>(_m, Cell(0,0,st)));
     fill(st);
 }
 
@@ -28,7 +29,7 @@ Grid::Grid(State* st, int t): _turns(t) {
 
 Grid::Grid(int x, int y, State* st, int t): 
 _n(x+2), _m(y+2), _turns(t) {
-    _petri.resize(_n, Array<Cell>(_m));
+    _petri.resize(_n, Array<Cell>(_m, Cell(0,0,st)));
     fill(st);
 }
 
@@ -42,10 +43,10 @@ _n(x+2), _m(y+2), _turns(t) {
  */
 
 void Grid::fill(State* st) {
-    //std::cout << "Rellenando petri: " << std::endl;
     for(auto i = 0; i < _n; i++) {
         for(auto j = 0; j < _m; j++) {
-            _petri[i][j] = Cell(i,j,st);
+            _petri[i][j].setState(st);
+            _petri[i][j].setPos(i,j);         
         }
     }
 }
@@ -105,20 +106,22 @@ void Grid::setCell(int i, int j, State* st) {
  * @brief Comienza el bucle
  */
 
-void Grid::start() {
-    std::cout << "Start: " << std::endl;
-    if(_turns == 0) {
-        for(;;) {
-            toString();
-            nextGeneration();
+void Grid::start() {   
+    if(_turns == 0) { // ¿turnos == 0?
+        for(;;) { // Entoces bucle infinito
+            toString(); // Se imprime la rejilla
+            if(isAllDead()) break; //  ¿Están todas las células muertas? -> break
+            nextGeneration(); // calcular siguiente generación
         }
-    } else {
-        for(auto i = 0; i <= _turns; i++) {
-            toString();
-            nextGeneration();
+        std::cout << "\n --- Game Over: Todas las células han muerto.\n";
+    } else { // ¿turnos > 0?
+        for(auto i = 0; i <= _turns; i++) { // entonces bucle en rango 0...turns
+            toString(); // Se imprime la rejilla
+            if(isAllDead()) break; //  ¿Están todas las células muertas? -> break
+            nextGeneration(); // Se calcula la siguiente generación
         }
+        std::cout << "\n --- Game Over: Se acabaron todos los turnos.\n";
     }
-
 }
 
 
@@ -130,14 +133,14 @@ void Grid::start() {
  */
 
  void Grid::nextGeneration() {
-    // calcular estados siguientes
+    // primr bucle para calcular estados siguientes
     for(auto i=1; i<_n-1; i++) {
         for(auto j=1; j<_m-1; j++) {
             if(!isMargin(i,j)) _petri[i][j].neighbors(*this);
         }
     }
 
-    // establecer estdo siguiente de la rejilla
+    // segundo bucle para establecer estdo siguiente de la rejilla
     for(auto i=1; i<_n-1; i++) {
         for(auto j=1; j<_m-1; j++) {
             if(!isMargin(i,j)) _petri[i][j].updateState();
@@ -154,18 +157,22 @@ void Grid::start() {
  */
 
 void Grid::toString() {
-    usleep(249599);
-    //usleep(149599);
-    //getchar(); getchar();
+    //usleep(249599);
+    //usleep(199599);
+    //susleep(149599);
+    
     bool err = system("clear");
 
+    std::cout << std::endl;
     for(auto &[i,row]: _petri.getBase()) {
         std::cout << std::setw(3) << i << " "; // imprimir el numero de la fila
         for(auto &[j,cell]: row.getBase()) {
-            std::cout << cell;
+            std::cout << cell << " ";
         }
         std::cout << std::endl;
     }
+
+    std::cout << "\n[ PRESS ENTER ]"; getchar();
 }
 
 
@@ -197,4 +204,20 @@ row& Grid::operator[](int index) {
 bool Grid::isMargin(int i, int j) const {
     //std::cout << i << " " << j << " ~~ " << _n-1 << " " << _m-1 << std::endl;
     return (i == 0 || j == 0 || i == (_n-1) || j == (_m-1));
+}
+
+/**
+ * @brief Comprueba que todas las células de la rejilla están muertas
+ * @return true 
+ * @return false 
+ */
+
+bool Grid::isAllDead() {
+    bool all_dead = true;
+    for(auto &[i,row]: _petri.getBase()) {
+        for(auto &[j,cell]: row.getBase()) {
+            if(cell.getState() != symbol[muerta]) all_dead = false;
+        }
+    }
+    return all_dead;
 }

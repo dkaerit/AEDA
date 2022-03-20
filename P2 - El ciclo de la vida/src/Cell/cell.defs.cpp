@@ -14,7 +14,8 @@
  */
 
 Cell::Cell(int i, int j, State* st) {
-    _pos   = std::make_pair(i,j);
+    _i = i;
+    _j = j;
     _state = st;
 }
 
@@ -26,8 +27,8 @@ Cell::Cell(int i, int j, State* st) {
  * @return State 
  */
 
-State* Cell::getState() const { 
-    return _state; 
+char Cell::getState() const { 
+    return _state->getState(); 
 }
 
 
@@ -39,9 +40,8 @@ State* Cell::getState() const {
  * @return State Nuevo estado actualizado
  */
 
-State* Cell::setState(State* st) { 
+void Cell::setState(State* st) { 
     _state = st;
-    return _state;
 }
 
 
@@ -54,7 +54,8 @@ State* Cell::setState(State* st) {
  */
 
 void Cell::setPos(int i, int j) {
-    _pos = std::make_pair(i,j);
+    _i = i;
+    _j = j;
 }
 
 
@@ -66,7 +67,7 @@ void Cell::setPos(int i, int j) {
  */
 
 point Cell::getPos() { 
-    return _pos; 
+    return std::make_pair(_i,_j); 
 }
 
 
@@ -80,7 +81,7 @@ point Cell::getPos() {
  */
 
 int Cell::neighbors(const Grid& grid) {
-    _state->neighbors(grid, _pos.first, _pos.second);
+    _state->neighbors(grid, _i, _j);
     return 0;
 }
 
@@ -89,5 +90,5 @@ int Cell::neighbors(const Grid& grid) {
  */
 
 void Cell::updateState() {
-    setState(_state->nextState());
+    _state = _state->nextState();
 }

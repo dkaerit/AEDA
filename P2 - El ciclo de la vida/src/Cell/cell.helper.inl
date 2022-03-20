@@ -6,7 +6,7 @@
  */
 
 inline std::ostream& operator<<(std::ostream& os, const Cell& cell) {
-    os << cell._state;
+    os << cell.getState();
     return os;
 }
 
