@@ -1,58 +1,11 @@
-#include "../Grid/headers/grid.basic.hpp"
-#include "../State/headers/dead.derived.hpp"
+#include "../../Grid/headers/grid.abstract.hpp"
+#include "../../State/headers/dead.derived.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                             //
 //                                DEFINICIONES DE LA CLASE                                     //
 //                                                                                             //
 /////////////////////////////////////////////////////////////////////////////////////////////////
-
-Grid::Grid(State* st, int t): _turns(t) {
-    srand(time(0));
-    _n = (rand()%5+35)+2; // alto
-    _m = (rand()%5+75)+2; // ancho
-
-    _petri.resize(_n, Array<Cell>(_m, Cell(0,0,st)));
-    fill(st);
-}
-
-
-
-
-
-/**
- * @brief Construct a new Grid:: Grid object
- * @param x Entero de la dimensión del eje x
- * @param y Entero de la dimensión del eje y
- * @param t Entero de los turnos de iteración
- */
-
-Grid::Grid(int x, int y, State* st, int t): 
-_n(x+2), _m(y+2), _turns(t) {
-    _petri.resize(_n, Array<Cell>(_m, Cell(0,0,st)));
-    fill(st);
-}
-
-
-
-
-
-/**
- * @brief Propaga una célula en todo el grid (incluyendo márgenes)
- * @param st Estado inicial de la célula a propagar
- */
-
-void Grid::fill(State* st) {
-    for(auto i = 0; i < _n; i++) {
-        for(auto j = 0; j < _m; j++) {
-            _petri[i][j].setState(st);
-            _petri[i][j].setPos(i,j);         
-        }
-    }
-}
-
-
-
 
 
 /**
@@ -61,44 +14,8 @@ void Grid::fill(State* st) {
  */
 
 const point Grid::getDim() const {
-    return std::make_pair(_n-2,_m-2);
+    return std::make_pair(_n-2, _m-2);
 }
-
-
-
-
-
-
-
-/**
- * @brief Retorna una referencia a la célula en la posición i,j
- * @param i Posición i en el eje x
- * @param j Posición j en el eje y
- * @return const Cell& referenci a célula de sólo lectura
- */
-
-const Cell& Grid::getCell(int i, int j) const {
-    assert(!isMargin(i,j));
-    return _petri[i][j];
-}
-
-
-
-
-
-
-/**
- * @brief Setea un estado en la célula ubicda en i, j
- * @param i Posición i en el eje x
- * @param j Posición j en el eje y
- */
-
-void Grid::setCell(int i, int j, State* st) {
-    assert(!isMargin(i+1,j+1));
-    _petri[i+1][j+1].setState(st);    
-}
-
-
 
 
 
@@ -109,19 +26,40 @@ void Grid::setCell(int i, int j, State* st) {
 void Grid::start() {   
     if(_turns == 0) { // ¿turnos == 0?
         for(;;) { // Entoces bucle infinito
-            toString(); // Se imprime la rejilla
+            //std::cout << "Pintando rejilla" << std::endl;
+            std::cout << *this; // Se imprime la rejilla
             if(isAllDead()) break; //  ¿Están todas las células muertas? -> break
             nextGeneration(); // calcular siguiente generación
         }
-        std::cout << "\n --- Game Over: Todas las células han muerto.\n";
+    
+        //if(system("clear")) throw std::system_error(errno, std::system_category(),"Error limpiando la consola");
+        std::cout << "\n --- Game Over: Todas las células han muerto. [ PRESS ENTER ]\n";
+        getchar();
     } else { // ¿turnos > 0?
         for(auto i = 0; i <= _turns; i++) { // entonces bucle en rango 0...turns
-            toString(); // Se imprime la rejilla
+            //std::cout << "Pintando rejilla" << std::endl;
+            std::cout << *this; // Se imprime la rejilla
             if(isAllDead()) break; //  ¿Están todas las células muertas? -> break
             nextGeneration(); // Se calcula la siguiente generación
         }
-        std::cout << "\n --- Game Over: Se acabaron todos los turnos.\n";
+    
+        //if(system("clear")) throw std::system_error(errno, std::system_category(),"Error limpiando la consola");
+        std::cout << "\n --- Game Over: Se acabaron todos los turnos. [ PRESS ENTER ]\n";
+        getchar();
     }
+}
+
+
+
+/**
+ * @brief Set the Cell object
+ * @param i 
+ * @param j 
+ * @param st 
+ */
+void Grid::setCell(int i, int j, State* st) {
+    if(isMargin(i+1,j+1)) throw std::system_error(errno, std::system_category(),"Posición (i,j) fuera del rango de la rejilla");;
+    _grid[i+1][j+1].setState(st);
 }
 
 
@@ -134,16 +72,18 @@ void Grid::start() {
 
  void Grid::nextGeneration() {
     // primr bucle para calcular estados siguientes
+    //std::cout << "Revisando neighbors" << std::endl;
     for(auto i=1; i<_n-1; i++) {
         for(auto j=1; j<_m-1; j++) {
-            if(!isMargin(i,j)) _petri[i][j].neighbors(*this);
+            if(!isMargin(i,j)) _grid[i][j].neighbors(*this);
         }
     }
 
     // segundo bucle para establecer estdo siguiente de la rejilla
+    //std::cout << "Actualizando estados" << std::endl;
     for(auto i=1; i<_n-1; i++) {
         for(auto j=1; j<_m-1; j++) {
-            if(!isMargin(i,j)) _petri[i][j].updateState();
+            if(!isMargin(i,j)) _grid[i][j].updateState();
         }
     }
  }
@@ -156,37 +96,56 @@ void Grid::start() {
  * @brief Imprime por pantalla la rejilla
  */
 
-void Grid::toString() {
-    //usleep(249599);
-    //usleep(199599);
-    susleep(149599);
-    
-    bool err = system("clear");
+static bool first_print = true;
+void Grid::toString(std::ostream& os) const {
 
-    std::cout << std::endl;
-    for(auto &[i,row]: _petri.getBase()) {
-        std::cout << std::setw(3) << i << " "; // imprimir el numero de la fila
-        for(auto &[j,cell]: row.getBase()) {
-            
-            if(i == 0    && j == 0   ) std::cout << "┌─"; // esquina sup-izq
-            else if(i == 0    && j == _m-1) std::cout << "─┐"; // esquina sup-der
-            else if(i == _n-1 && j == 0   ) std::cout << "└─"; // esquina inf-izq
-            else if(i == _n-1 && j == _m-1) std::cout << "─┘"; // esquina inf-der
-            else if(i == 0    && 0 < j && j < _m) std::cout << "──"; // sup
-            else if(i == _n-1 && 0 < j && j < _m) std::cout << "──"; // inf
-            else if(j == 0    && 0 < i && i < _n) std::cout << "│ "; // izq
-            else if(j == _m-1 && 0 < i && i < _n) std::cout << " │"; // der
+    usleep(149599);  
+    if(system("clear")) throw std::system_error(errno, std::system_category(),"Error limpiando la consola");
 
-            else std::cout << cell << " ";
-            
-            
+    os << std::endl;
+    for(int i = 0; i < _n; i++) { //for(auto &[i,row]: _grid.getBase()) {
+        os << std::setw(3) << i << " "; // imprimir el numero de la fila
+        for(int j = 0; j < _m; j++) { //for(auto &[j,cell]: row.getBase()) {
+            if(isMargin(i,j)) frame(i,j,os);
+            else os << getCell(i,j) << " ";
         }
-        std::cout << std::endl;
+        os << std::endl;
     }
 
-    std::cout << "\n[ PRESS ENTER ]"; //getchar();
+    if(first_print) { os << "\n[ PRESS ENTER ]"; getchar(); }
+    first_print = false;
 }
 
+/**
+ * @brief Pintar el marco que representa el borde de la rejilla
+ * @param i 
+ * @param j 
+ * @return true 
+ * @return false 
+ */
+
+void Grid::frame(int i, int j, std::ostream& os) const {
+    int x = _m-1, y=_n-1;
+
+    if(j == 0) {
+        if(i == 0) os << "┌─";
+        if(i == y) os << "└─";
+    } 
+
+    if(j == x) {
+        if(i == 0) os << "┐";
+        if(i == y) os << "┘";
+    }
+
+    if(0 < j && j < x) {
+        if(i == 0 || i == y) os << "──";
+    }
+
+    if(0 < i && i < y) {
+        if(j == 0) os << "│ ";
+        if(j == x) os << "│";
+    }  
+}   
 
 
 
@@ -198,7 +157,7 @@ void Grid::toString() {
  */
 
 row& Grid::operator[](int index) {
-    return _petri[index];
+    return _grid[index];
 }
 
 
@@ -218,6 +177,24 @@ bool Grid::isMargin(int i, int j) const {
     return (i == 0 || j == 0 || i == (_n-1) || j == (_m-1));
 }
 
+
+
+/**
+ * @brief Comprueba que una coordenada esta dentro de la rejilla
+ * @param i 
+ * @param j 
+ * @return true 
+ * @return false 
+ */
+bool Grid::isInside(int i, int j) const {
+    //std::cout << i << " " << j << " ~~ " << _n-1 << " " << _m-1 << std::endl;
+    return (0 <= i && i < _n && 0 <= j && j < _m);
+}
+
+
+
+
+
 /**
  * @brief Comprueba que todas las células de la rejilla están muertas
  * @return true 
@@ -226,7 +203,7 @@ bool Grid::isMargin(int i, int j) const {
 
 bool Grid::isAllDead() {
     bool all_dead = true;
-    for(auto &[i,row]: _petri.getBase()) {
+    for(auto &[i,row]: _grid.getBase()) {
         for(auto &[j,cell]: row.getBase()) {
             if(cell.getState() != symbol[muerta]) all_dead = false;
         }

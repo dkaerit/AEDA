@@ -23,8 +23,8 @@ typedef unsigned int index_t;
 template <class type>
 class Array {
     private:
-        kva<type> base;
-        int zero;        
+        kva<type> base; // array/vector/cola
+        int zero; // índice mínimo      
 
     public:
         virtual ~Array() {}
@@ -123,6 +123,32 @@ void Array<type>::resize(int max, const type& value) {
     base.resize(max); zero = 0;
     for(auto i = 0; i < size(); i++)
         base[i] = std::make_pair(i,value);
+}
+
+
+
+/**
+ * @brief 
+ * @tparam type 
+ * @param a 
+ */
+
+template<class type>
+void Array<type>::pushBack(const type& a) {
+    base.push_back(std::make_pair(suplim(),a));
+}
+
+
+/**
+ * @brief  
+ * @tparam type 
+ * @param a 
+ */
+
+template<class type>
+void Array<type>::pushFront(const type& a) {
+    base.push_front(std::make_pair(zero-1,a));
+    zero -= 1;
 }
 
 

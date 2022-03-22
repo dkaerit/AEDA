@@ -1,3 +1,5 @@
+#include <iomanip>
+
 /**
  * @brief Permite imprimir un instancia de célula por salida estándar
  * @param os Secuencia de crácteres por salida ostream
@@ -6,7 +8,10 @@
  */
 
 inline std::ostream& operator<<(std::ostream& os, const Cell& cell) {
-    os << cell.getState();
+    if(cell.getState() == 'X') os << "◼";
+    else os << " ";
+    //os << cell.getState();
+    //os << "(" << std::setw(2) << cell._i << "," << std::setw(2) << cell._j << ")";
     return os;
 }
 

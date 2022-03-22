@@ -13,8 +13,10 @@ $(SDIR)/State/definitions/alive.defs.cpp \
 $(SDIR)/State/definitions/dead.defs.cpp \
 $(SDIR)/Cell/cell.defs.cpp \
 $(SDIR)/Grid/definitions/grid.defs.cpp \
-
-
+$(SDIR)/Grid/definitions/open.defs.cpp \
+$(SDIR)/Grid/definitions/periodic.defs.cpp \
+$(SDIR)/Grid/definitions/reflective.defs.cpp \
+$(SDIR)/Grid/definitions/without.defs.cpp \
 
 
 #INC = \

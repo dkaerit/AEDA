@@ -12,7 +12,7 @@
 #define STATE_H
 
 #include <algorithm>
-#include "../../Grid/grid.basic.hpp"
+#include "../../Grid/headers/grid.abstract.hpp"
 class Grid;
 
 enum StateCoding { muerta=0, huevo=1, larva=2, pupa=3, adulta=4, viva=5 };

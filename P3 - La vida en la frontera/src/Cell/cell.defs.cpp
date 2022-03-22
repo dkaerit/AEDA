@@ -72,6 +72,16 @@ point Cell::getPos() {
 
 
 
+/**
+ * @brief Devuelve la posición de la célula
+ * @return point 
+ */
+
+point Cell::getPos() const { 
+    return std::make_pair(_i,_j); 
+}
+
+
 
 
 /**

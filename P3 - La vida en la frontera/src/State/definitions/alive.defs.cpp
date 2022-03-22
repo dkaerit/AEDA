@@ -33,7 +33,7 @@ int StateAlive::neighbors(const Grid& grid, int i, int j) {
     // Contar vecinos    
     for(auto x = -1; x < 2; x++) {
         for(auto y = -1; y < 2; y++) {
-            if(!grid.isMargin(x+i,y+j) && !(x==0 && y==0)) {
+            if(grid.isInside(x+i,y+j) && !(x==0 && y==0)) {
                 if(grid.getCell(x+i,y+j).getState() == symbol[viva]) vivas++;
             }
         }

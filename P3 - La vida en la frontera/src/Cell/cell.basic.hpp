@@ -41,6 +41,7 @@ class Cell {
         void setState(State*); // state setter
 
         point getPos(); // pos getter
+        point getPos() const;
         void  setPos(int,int); // pos setter
         
         int neighbors(const Grid&); // consultar el estado de los vecinos
