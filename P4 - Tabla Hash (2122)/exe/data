@@ -1,0 +1,9 @@
+if(tabla[pos].insert(X)) {
+        cout << "[✔] Insertado en la dirección: " << dir << " (" << &_vDatos[dir] << ")" << endl;
+        return true;
+    } else {
+        cout << "[✘] Ya se ha insertado esa clave en: " << dir << " (" << &_vDatos[dir] << ")" << endl;
+        return false;
+    }
+
+
