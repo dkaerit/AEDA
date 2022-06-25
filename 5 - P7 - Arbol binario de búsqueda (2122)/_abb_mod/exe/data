@@ -1,0 +1,10 @@
+        if(i < mat.size()-1) {
+            x = alt()-(z+1);
+            h = (pow(x,3)+5*x)/2; // heurística para calcular las línas
+            spaces = string(h,' '); // n spaces  
+            for(int k = 0; k < h/2; k++) lines += "─";
+            int l = ((pow(z,3)+5*z)/6)+1;
+            for(int k = 0; k < l; k++) 
+                cout << spaces << "┌" << lines << "┸" << lines << "┐" << spaces;
+            
+        }
